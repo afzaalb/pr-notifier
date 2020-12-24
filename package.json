@@ -1,6 +1,6 @@
 {
   "name": "pr-notifier",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Native Notification Service for Pull Request change limit",
   "main": "index.js",
   "bin": "index.js",
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/afzaalb/pr-notifier#readme",
   "dependencies": {
     "git-user-name": "^2.0.0",
+    "minimist": "^1.2.5",
     "node-notifier": "^9.0.0",
     "parse-diff": "^0.7.1"
   }

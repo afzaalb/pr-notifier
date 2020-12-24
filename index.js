@@ -2,6 +2,7 @@ const { exec } = require("child_process");
 const notifier = require("node-notifier");
 const getUserName = require("git-user-name");
 const parse = require("parse-diff");
+const args = require("minimist")(process.argv.slice(2));
 
 const getWorkingDirectoryChanges = (gitDiff) => {
   const files = parse(gitDiff);
@@ -15,44 +16,34 @@ const getWorkingDirectoryChanges = (gitDiff) => {
   return numberOfChanges;
 };
 
-const notifyAuthorForPullRequest = (numberOfChanges) => {
+const notifyAuthorForPullRequest = (allowedPRLines) => {
   const firstName = getUserName().split(" ")[0];
-  notifier.notify(
-    {
-      title: `${firstName}, Time for Pull Request`,
-      message: `PR limit for ${numberOfChanges} lines has exceeded.`,
-      icon: "https://cloud.lunchon.ae/static/onIco.png", // Absolute path (doesn't work on balloons)
-      sound: true, // Only Notification Center or Windows Toasters
-      wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
-    },
-    function (err, response, metadata) {
-      console.log("Notifier callback", err, response, metadata);
-      // Response is response from notification
-      // Metadata contains activationType, activationAt, deliveredAt
-    }
-  );
+  const notificationIcon =
+    args["icon"] || "https://afzaalb.vercel.app/common/afzaalb.jpg";
 
-  notifier.on("click", function (notifierObject, options, event) {
-    // Triggers if `wait: true` and user clicks notification
-  });
-
-  notifier.on("timeout", function (notifierObject, options) {
-    // Triggers if `wait: true` and notification closes
+  notifier.notify({
+    title: `${firstName}, Time for Pull Request`,
+    message: `PR limit for ${allowedPRLines} line(s) has exceeded.`,
+    icon: notificationIcon, // Absolute path (doesn't work on balloons)
+    sound: true, // Only Notification Center or Windows Toasters
+    wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
   });
 };
 
-const pullRequestNotifier = (allowedPRLines = 100) => {
+const pullRequestNotifier = () => {
+  const allowedPRLines = args["allowedLines"] || 100;
+
   exec("git diff", (err, stdout) => {
     if (err) {
       return;
     }
-    const numberOfChanges = getWorkingDirectoryChanges(stdout);
 
+    const numberOfChanges = getWorkingDirectoryChanges(stdout);
     // Only Notify for PR when limit is reached/exceeded
     if (numberOfChanges >= allowedPRLines) {
-      notifyAuthorForPullRequest(numberOfChanges);
+      notifyAuthorForPullRequest(allowedPRLines);
     }
   });
 };
 
-module.exports = { pullRequestNotifier };
+module.exports = pullRequestNotifier();
