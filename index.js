@@ -3,10 +3,10 @@ const notifier = require("node-notifier");
 const getUserName = require("git-user-name");
 const parse = require("parse-diff");
 
-const getWorkingDirectoryChanges = gitDiff => {
+const getWorkingDirectoryChanges = (gitDiff) => {
   const files = parse(gitDiff);
   let numberOfChanges = 0;
-  files.forEach(function(file) {
+  files.forEach(function (file) {
     // numberOfChanges += file.deletions;
     // numberOfChanges += file.additions;
     numberOfChanges += file.chunks[0].changes.length;
@@ -15,7 +15,7 @@ const getWorkingDirectoryChanges = gitDiff => {
   return numberOfChanges;
 };
 
-const notifyAuthorForPullRequest = numberOfChanges => {
+const notifyAuthorForPullRequest = (numberOfChanges) => {
   const firstName = getUserName().split(" ")[0];
   notifier.notify(
     {
@@ -25,18 +25,18 @@ const notifyAuthorForPullRequest = numberOfChanges => {
       sound: true, // Only Notification Center or Windows Toasters
       wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
     },
-    function(err, response, metadata) {
+    function (err, response, metadata) {
       console.log("Notifier callback", err, response, metadata);
       // Response is response from notification
       // Metadata contains activationType, activationAt, deliveredAt
-    },
+    }
   );
 
-  notifier.on("click", function(notifierObject, options, event) {
+  notifier.on("click", function (notifierObject, options, event) {
     // Triggers if `wait: true` and user clicks notification
   });
 
-  notifier.on("timeout", function(notifierObject, options) {
+  notifier.on("timeout", function (notifierObject, options) {
     // Triggers if `wait: true` and notification closes
   });
 };

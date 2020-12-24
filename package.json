@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Native Notification Service for Pull Request change limit",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,11 +12,12 @@
     "url": "git+https://github.com/afzaalb/pr-notifier.git"
   },
   "keywords": [
-    "pull reuqests",
+    "pull requests",
     "notification",
-    "node",
     "code",
-    "review"
+    "review",
+    "node",
+    "javascript"
   ],
   "author": "Muhammad Afzaal Khalid",
   "license": "MIT",
@@ -23,9 +25,6 @@
     "url": "https://github.com/afzaalb/pr-notifier/issues"
   },
   "homepage": "https://github.com/afzaalb/pr-notifier#readme",
-  "devDependencies": {
-    "lite-server": "^2.5.4"
-  },
   "dependencies": {
     "git-user-name": "^2.0.0",
     "node-notifier": "^9.0.0",
