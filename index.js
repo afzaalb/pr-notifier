@@ -1,4 +1,5 @@
-const { exec } = require("child_process");
+#!/usr/bin/env node
+const childProcess = require("child_process");
 const notifier = require("node-notifier");
 const getUserName = require("git-user-name");
 const parse = require("parse-diff");
@@ -22,8 +23,8 @@ const notifyAuthorForPullRequest = (allowedPRLines) => {
     args["icon"] || "https://afzaalb.vercel.app/common/afzaalb.jpg";
 
   notifier.notify({
-    title: `${firstName}, Time for Pull Request`,
-    message: `PR limit for ${allowedPRLines} line(s) has exceeded.`,
+    title: firstName + ", Time for Pull Request",
+    message: "PR limit for " + allowedPRLines + " line(s) has exceeded.",
     icon: notificationIcon, // Absolute path (doesn't work on balloons)
     sound: true, // Only Notification Center or Windows Toasters
     wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
@@ -33,7 +34,7 @@ const notifyAuthorForPullRequest = (allowedPRLines) => {
 const pullRequestNotifier = () => {
   const allowedPRLines = args["allowedLines"] || 100;
 
-  exec("git diff", (err, stdout) => {
+  childProcess.exec("git diff", (err, stdout) => {
     if (err) {
       return;
     }
